@@ -9,18 +9,38 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    Button sentryButton;
+    Button videosButton;
+    Button settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button button = (Button) findViewById(R.id.button);
+        sentryButton = (Button) findViewById(R.id.sentryButton);
+        videosButton = (Button) findViewById(R.id.videosButton);
+        settingsButton = (Button) findViewById(R.id.settingsButton);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        sentryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, SentryModeActivity.class));
+                Intent i=new Intent("edu.utep.cs.sirenandroidapp.SentryModeActivity");
+                startActivity(i);
+            }
+        });
+        videosButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Intent i=new Intent("edu.utep.cs.sirenandroidapp.VideosActivity");
+                //startActivity(i);
+            }
+        });
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Intent i=new Intent("edu.utep.cs.sirenandroidapp.SettingsActivity");
+                //startActivity(i);
             }
         });
     }

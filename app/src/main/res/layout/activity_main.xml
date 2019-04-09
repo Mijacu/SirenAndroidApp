@@ -4,12 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="edu.utep.cs.sirenandroidapp.MainActivity">
+
+    <TextView
+        android:id="@+id/mainView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Main Menu" />
+
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
+        android:id="@+id/sentryButton"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Main Menu" />
+        android:text="Sentry Mode" />
+
+    <Button
+        android:id="@+id/videosButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Videos" />
+
+    <Button
+        android:id="@+id/settingsButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings" />
+
+
 
 </LinearLayout>

@@ -22,6 +22,7 @@ public class SentryModeActivity extends Activity {
 
     boolean motionDetected=true;
     final Context context = this;
+    static final int REQUEST_VIDEO_CAPTURE= 2;
     Camera camera;
 
     @Override
@@ -58,7 +59,6 @@ public class SentryModeActivity extends Activity {
         });
     }
 
-    static final int REQUEST_VIDEO_CAPTURE= 2;
 
     private void dispatchTakeVideoIntent() {
         System.out.println("recording");
