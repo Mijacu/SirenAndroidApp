@@ -12,20 +12,21 @@ import org.opencv.android.OpenCVLoader;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button sentryButton;
-    Button videosButton;
-    Button settingsButton;
+    private static final String TAG ="SirenApp";
+
+    private Button sentryButton;
+    private Button videosButton;
+    private Button settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (!OpenCVLoader.initDebug()) {
-            Log.d("Msgf", "  OpenCVLoader.initDebug(), not working.");
+            Log.d(TAG, "  OpenCVLoader.initDebug(), not working.");
         } else {
-            Log.d("Msgf", "  OpenCVLoader.initDebug(), working.");
+            Log.d(TAG, "  OpenCVLoader.initDebug(), working.");
         }
-
         sentryButton = (Button) findViewById(R.id.sentryButton);
         videosButton = (Button) findViewById(R.id.videosButton);
         settingsButton = (Button) findViewById(R.id.settingsButton);
@@ -34,7 +35,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(getApplicationContext(),SentryModeActivity.class);
-                startActivity(i);
+                startActivityForResult(i, 1); // 1: request code
+
+
             }
         });
         videosButton.setOnClickListener(new View.OnClickListener() {
@@ -51,5 +54,17 @@ public class MainActivity extends AppCompatActivity {
                 //startActivity(i);
             }
         });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent result) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            String msg=result.getStringExtra("message");
+            Log.d(TAG,msg);
+            if(msg.equals("keep sentry")){
+                Intent i=new Intent(getApplicationContext(),SentryModeActivity.class);
+                startActivityForResult(i, 1); // 1: request code
+            }
+        }
+
     }
 }
