@@ -50,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent i=new Intent("edu.utep.cs.sirenandroidapp.SettingsActivity");
-                //startActivity(i);
+                Intent i=new Intent(getApplicationContext(),SirenSettings.class);
+                startActivity(i);
             }
         });
     }
