@@ -17,11 +17,10 @@ public class SirenSettings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_siren_settings);
-
-        name.findViewById(R.id.name);
+       /* name.findViewById(R.id.name);
         email.findViewById(R.id.email);
         password.findViewById(R.id.password);
-        recordTime.findViewById(R.id.recorctime);
+        recordTime.findViewById(R.id.recorctime);*/
 
 
 
