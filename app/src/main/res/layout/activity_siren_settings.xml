@@ -58,7 +58,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Please Enter User Name"
-                            android:imeOptions="actionNext"
+
                             android:textColorHint="@color/colorPrimary" />
 
                     </android.support.design.widget.TextInputLayout>
