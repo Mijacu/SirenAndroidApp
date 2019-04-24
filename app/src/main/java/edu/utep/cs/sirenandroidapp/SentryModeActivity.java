@@ -13,11 +13,15 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Vibrator;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -63,6 +67,10 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
     private MediaRecorder mMediaRecorder;
     private File mOutputFile;
     private CountDownTimer timer;
+    boolean isPlaying=false;
+    final Context context = this;
+
+    private Vibrator vibe;
 
     private boolean isRecording = false;
 
@@ -105,8 +113,38 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         Log.i(TAG, "called onCreate");
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         setContentView(R.layout.sentry_activity);
+
+      Button ringer= (Button) findViewById(R.id.doorbell);
+        ringer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+                vb.vibrate(100);
+                Uri ring = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+                Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ring);
+                if(isPlaying==false) {
+                    r.play();
+                    isPlaying=true;
+                }
+               else{ r.stop();
+               }
+
+            }
+        });
+
+       Button disarm=(Button)findViewById(R.id.disarm);
+        disarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
+                vb.vibrate(100);
+                final Dialog dialog = new Dialog(context);
+                dialog.setContentView(R.layout.number_pad);
+                dialog.show();
+
+            }
+        });
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_java_surface_view);
 

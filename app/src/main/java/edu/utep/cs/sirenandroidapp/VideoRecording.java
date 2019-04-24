@@ -47,9 +47,7 @@ public class VideoRecording extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         setContentView(R.layout.activity_video_recording);
-
         mPreview = (TextureView) findViewById(R.id.surface_view);
     }
     @Override
@@ -104,8 +102,6 @@ public class VideoRecording extends AppCompatActivity {
 
         }
     }
-
-
 
 
     private void releaseMediaRecorder(){
