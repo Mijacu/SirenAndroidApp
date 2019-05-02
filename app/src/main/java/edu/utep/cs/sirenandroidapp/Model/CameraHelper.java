@@ -153,6 +153,7 @@ public class CameraHelper {
      * @return A file object pointing to the newly created file.
      */
     public  static File getOutputMediaFile(int type){
+        String videoName;
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.
         if (!Environment.getExternalStorageState().equalsIgnoreCase(Environment.MEDIA_MOUNTED)) {
@@ -160,7 +161,7 @@ public class CameraHelper {
         }
 
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "CameraSample");
+                Environment.DIRECTORY_PICTURES), "SirenAppVideos");
         // This location works best if you want the created images to be shared
         // between applications and persist after your app has been uninstalled.
 
@@ -179,9 +180,9 @@ public class CameraHelper {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                     "IMG_"+ timeStamp + ".jpg");
         } else if(type == MEDIA_TYPE_VIDEO) {
+            videoName="VID_"+ timeStamp + ".mp4";
             Log.d("CameraSample", mediaStorageDir.getPath());
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
+            mediaFile = new File(mediaStorageDir.getPath()+File.separator+videoName);
         } else {
             return null;
         }

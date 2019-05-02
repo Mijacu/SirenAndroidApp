@@ -105,9 +105,6 @@ public class VideoRecording extends AppCompatActivity {
         }
     }
 
-
-
-
     private void releaseMediaRecorder(){
         if (mMediaRecorder != null) {
             // clear recorder configuration
