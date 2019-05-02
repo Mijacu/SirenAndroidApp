@@ -24,6 +24,7 @@
         android:name="android.hardware.camera.front.autofocus"
         android:required="false" />
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
@@ -34,7 +35,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".VideoRecording"></activity>
+        <activity android:name=".VideoListActivity"></activity>
+        <activity android:name=".VideoRecording" />
+        <activity android:name=".SirenSettings" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

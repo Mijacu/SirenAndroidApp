@@ -43,15 +43,15 @@ public class MainActivity extends AppCompatActivity {
         videosButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent i=new Intent("edu.utep.cs.sirenandroidapp.VideosActivity");
-                //startActivity(i);
+                Intent i=new Intent(getApplicationContext(),VideoListActivity.class);
+                startActivity(i);
             }
         });
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent i=new Intent("edu.utep.cs.sirenandroidapp.SettingsActivity");
-                //startActivity(i);
+                Intent i=new Intent(getApplicationContext(),SirenSettings.class);
+                startActivity(i);
             }
         });
     }
