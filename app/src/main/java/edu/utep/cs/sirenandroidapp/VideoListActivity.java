@@ -29,7 +29,6 @@ public class VideoListActivity extends AppCompatActivity {
     private VideoAdapter mVideoAdapter;
     private DatabaseHelper dbHelper;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,15 +39,13 @@ public class VideoListActivity extends AppCompatActivity {
 
         /***populate video list to adapter**/
         mVideoAdapter = new VideoAdapter(this, mVideosList);
-        mVideosListView.setAdapter(mVideoAdapter);
-        registerForContextMenu(mVideosListView);
-    }
+        mVideoAdapter.setListener(new VideoAdapter.AdapterListener(){
 
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.setHeaderTitle("Context Menu");
-        menu.add(0, v.getId(), 0, "Upload");
-        menu.add(0, v.getId(), 0, "Search");
+            @Override
+            public void notifyAdapter() {
+                mVideoAdapter.notifyDataSetChanged();
+            }
+        });
+        mVideosListView.setAdapter(mVideoAdapter);
     }
 }

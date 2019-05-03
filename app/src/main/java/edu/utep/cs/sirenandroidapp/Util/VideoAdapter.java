@@ -4,11 +4,14 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -19,26 +22,42 @@ import edu.utep.cs.sirenandroidapp.Model.Video;
 import edu.utep.cs.sirenandroidapp.R;
 
 public class VideoAdapter extends ArrayAdapter <Video> {
+    private static final String TAG ="SirenApp";
 
     private Context mContext;
     private List<Video> mVideos;
     private TextView videoName;
+    private DatabaseHelper databaseHelper;
+    private AdapterListener adaptarListener;
 
+    public interface AdapterListener{
+        void notifyAdapter();
+    }
     public VideoAdapter( Context context, List<Video> object) {
         super(context, R.layout.activity_listview ,object);
         mContext = context;
         mVideos = object;
+        databaseHelper=new DatabaseHelper(mContext);
     }
 
+    public void setListener(AdapterListener adaptarListener){
+        this.adaptarListener=adaptarListener;
+    }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder holder;
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_listview, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_listview, parent,false);
             holder = new ViewHolder();
             holder.videoView = (VideoView) convertView.findViewById(R.id.videoView);
+            holder.videoView.setOnClickListener((view)->{
+                Video video=databaseHelper.videosList().get(position);
+                databaseHelper.removeVideo(video.getId());
+                adaptarListener.notifyAdapter();
+                Log.d(TAG,"Remove Video");
+            });
             videoName=(TextView) convertView.findViewById(R.id.textView);
             convertView.setTag(holder);
         }
@@ -71,11 +90,6 @@ public class VideoAdapter extends ArrayAdapter <Video> {
         return convertView;
     }
 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-        menu.add(0, v.getId(), 0, "Delete");
-    }
-
-
     public static class ViewHolder {
         VideoView videoView;
     }
@@ -84,12 +98,4 @@ public class VideoAdapter extends ArrayAdapter <Video> {
         mContext.getContentResolver().delete(Uri.parse(path), null, null);
 
     }
-
-
-
-
-
-
-
-
 }
