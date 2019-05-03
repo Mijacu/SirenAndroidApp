@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import edu.utep.cs.sirenandroidapp.Model.CameraHelper;
 import edu.utep.cs.sirenandroidapp.Model.Video;
+import edu.utep.cs.sirenandroidapp.Util.DatabaseHelper;
 import edu.utep.cs.sirenandroidapp.Util.VideoAdapter;
 
 public class VideoListActivity extends AppCompatActivity {
@@ -23,50 +25,20 @@ public class VideoListActivity extends AppCompatActivity {
     private ListView mVideosListView;
     private List<Video> mVideosList = new ArrayList<>();
     private VideoAdapter mVideoAdapter;
-    private ArrayList<String> paths = new ArrayList<String>();
+    private DatabaseHelper dbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
         mVideosListView = (ListView) findViewById(R.id.video_list);
-        paths=getAllMedia();
-
-
-        for(int i=0;i<paths.size();i++){
-            Video riverVideo = new Video(paths.get(i),"199"+i,paths.get(i));
-            mVideosList.add(riverVideo);
-        }
+        dbHelper=new DatabaseHelper(this);
+        mVideosList=dbHelper.videosList();
 
         /***populate video list to adapter**/
         mVideoAdapter = new VideoAdapter(this, mVideosList);
         mVideosListView.setAdapter(mVideoAdapter);
         registerForContextMenu(mVideosListView);
-
-
     }
-
-    public ArrayList<String> getAllMedia() {
-        HashSet<String> videoItemHashSet = new HashSet<>();
-        String[] projection = { MediaStore.Video.VideoColumns.DATA ,MediaStore.Video.Media.DISPLAY_NAME};
-        Cursor cursor = this.getContentResolver().query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-        try {
-            cursor.moveToFirst();
-            do{
-                videoItemHashSet.add((cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA))));
-            }while(cursor.moveToNext());
-
-            cursor.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        ArrayList<String> downloadedList = new ArrayList<>(videoItemHashSet);
-        return downloadedList;
-    }
-
-
-
-
-
-
 }

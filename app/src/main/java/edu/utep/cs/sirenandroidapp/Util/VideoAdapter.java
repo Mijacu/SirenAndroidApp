@@ -14,16 +14,15 @@ import android.widget.VideoView;
 
 import java.util.List;
 
+import edu.utep.cs.sirenandroidapp.Model.CameraHelper;
 import edu.utep.cs.sirenandroidapp.Model.Video;
 import edu.utep.cs.sirenandroidapp.R;
 
 public class VideoAdapter extends ArrayAdapter <Video> {
 
-
     private Context mContext;
     private List<Video> mVideos;
     private TextView videoName;
-
 
     public VideoAdapter( Context context, List<Video> object) {
         super(context, R.layout.activity_listview ,object);
@@ -53,8 +52,8 @@ public class VideoAdapter extends ArrayAdapter <Video> {
         try {
             Video video = mVideos.get(position);
             //play video using android api, when video view is clicked.
-            String url = video.getName(); // your videoName
-           Uri videoUri = Uri.parse(url);
+            String url = video.getPath(); // your videoName
+            Uri videoUri = Uri.parse(url);
            // Uri videoUri= Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/media/1.mp4" );
             holder.videoView.setVideoURI(videoUri);
                 videoName.setText("Date : "+video.getDate());
@@ -62,6 +61,7 @@ public class VideoAdapter extends ArrayAdapter <Video> {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mp.setLooping(true);
+                    mp.setVolume(0,0);
                     holder.videoView.start();
                 }
             });
@@ -83,7 +83,6 @@ public class VideoAdapter extends ArrayAdapter <Video> {
 
     public static class ViewHolder {
         VideoView videoView;
-
     }
 
     public void deleteVideo(String path){

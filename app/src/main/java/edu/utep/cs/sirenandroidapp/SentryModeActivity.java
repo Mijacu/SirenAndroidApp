@@ -153,7 +153,6 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         mOpenCvCameraView.setCvCameraViewListener(this);
         mPreview = (TextureView) findViewById(R.id.surface_view);
         cameraHelper=new CameraHelper(this);
-
     }
 
     @Override
