@@ -65,14 +65,9 @@ public class VideoAdapter extends ArrayAdapter <Video> {
                     holder.videoView.start();
                 }
             });
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
         return convertView;
     }
 

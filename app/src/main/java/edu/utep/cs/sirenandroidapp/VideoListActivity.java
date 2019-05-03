@@ -6,6 +6,8 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -40,5 +42,13 @@ public class VideoListActivity extends AppCompatActivity {
         mVideoAdapter = new VideoAdapter(this, mVideosList);
         mVideosListView.setAdapter(mVideoAdapter);
         registerForContextMenu(mVideosListView);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Context Menu");
+        menu.add(0, v.getId(), 0, "Upload");
+        menu.add(0, v.getId(), 0, "Search");
     }
 }
