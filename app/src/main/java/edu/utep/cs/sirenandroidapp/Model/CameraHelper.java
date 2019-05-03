@@ -17,6 +17,7 @@
 package edu.utep.cs.sirenandroidapp.Model;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Environment;
@@ -28,6 +29,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import edu.utep.cs.sirenandroidapp.Util.DatabaseHelper;
+
 /**
  * Camera related utilities.
  */
@@ -35,7 +38,13 @@ public class CameraHelper {
 
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    private Context context;
+    private DatabaseHelper dbHelper;
 
+    public CameraHelper(Context context){
+        this.context=context;
+        dbHelper=new DatabaseHelper(context);
+    }
     /**
      * Iterate over supported camera video sizes to see which one best fits the
      * dimensions of the given view while maintaining the aspect ratio. If none can,
@@ -47,7 +56,7 @@ public class CameraHelper {
      * @param h     The height of the view.
      * @return Best match camera video size to fit in the view.
      */
-    public static Camera.Size getOptimalVideoSize(List<Camera.Size> supportedVideoSizes,
+    public Camera.Size getOptimalVideoSize(List<Camera.Size> supportedVideoSizes,
             List<Camera.Size> previewSizes, int w, int h) {
         // Use a very small tolerance because we want an exact match.
         final double ASPECT_TOLERANCE = 0.1;
@@ -99,7 +108,7 @@ public class CameraHelper {
     /**
      * @return the default camera on the device. Return null if there is no camera on the device.
      */
-    public static Camera getDefaultCameraInstance() {
+    public Camera getDefaultCameraInstance() {
         return Camera.open();
     }
 
@@ -108,7 +117,7 @@ public class CameraHelper {
      * @return the default rear/back facing camera on the device. Returns null if camera is not
      * available.
      */
-    public static Camera getDefaultBackFacingCameraInstance() {
+    public Camera getDefaultBackFacingCameraInstance() {
         return getDefaultCamera(Camera.CameraInfo.CAMERA_FACING_BACK);
     }
 
@@ -116,7 +125,7 @@ public class CameraHelper {
      * @return the default front facing camera on the device. Returns null if camera is not
      * available.
      */
-    public static Camera getDefaultFrontFacingCameraInstance() {
+    public Camera getDefaultFrontFacingCameraInstance() {
         return getDefaultCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
     }
 
@@ -128,7 +137,7 @@ public class CameraHelper {
      * @return the default camera on the device. Returns null if camera is not available.
      */
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
-    private static Camera getDefaultCamera(int position) {
+    private Camera getDefaultCamera(int position) {
         // Find the total number of cameras available
         int  mNumberOfCameras = Camera.getNumberOfCameras();
 
@@ -152,7 +161,7 @@ public class CameraHelper {
      * @param type Media type. Can be video or image.
      * @return A file object pointing to the newly created file.
      */
-    public  static File getOutputMediaFile(int type){
+    public File getOutputMediaFile(int type){
         String videoName;
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.

@@ -32,6 +32,7 @@ public class VideoRecording extends AppCompatActivity {
     private Camera mCamera;
     private TextureView mPreview;
     private MediaRecorder mMediaRecorder;
+    private CameraHelper cameraHelper;
     private File mOutputFile;
 
     private boolean isRecording = false;
@@ -49,6 +50,7 @@ public class VideoRecording extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_video_recording);
         mPreview = (TextureView) findViewById(R.id.surface_view);
+        cameraHelper=new CameraHelper(this);
     }
     @Override
     protected void onPause() {
@@ -128,7 +130,7 @@ public class VideoRecording extends AppCompatActivity {
     private boolean prepareVideoRecorder(){
 
         // BEGIN_INCLUDE (configure_preview)
-        mCamera = CameraHelper.getDefaultCameraInstance();
+        mCamera = cameraHelper.getDefaultCameraInstance();
 
         // We need to make sure that our preview and recording video size are supported by the
         // camera. Query camera to find all the sizes and choose the optimal size given the
@@ -136,7 +138,7 @@ public class VideoRecording extends AppCompatActivity {
         Camera.Parameters parameters = mCamera.getParameters();
         List<Camera.Size> mSupportedPreviewSizes = parameters.getSupportedPreviewSizes();
         List<Camera.Size> mSupportedVideoSizes = parameters.getSupportedVideoSizes();
-        Camera.Size optimalSize = CameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
+        Camera.Size optimalSize = cameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
                 mSupportedPreviewSizes, mPreview.getWidth(), mPreview.getHeight());
 
         // Use the same size for recording profile.
@@ -172,7 +174,7 @@ public class VideoRecording extends AppCompatActivity {
         mMediaRecorder.setProfile(profile);
 
         // Step 4: Set output file
-        mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);
+        mOutputFile = cameraHelper.getOutputMediaFile(cameraHelper.MEDIA_TYPE_VIDEO);
         if (mOutputFile == null) {
             return false;
         }
