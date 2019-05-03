@@ -1,16 +1,24 @@
 package edu.utep.cs.sirenandroidapp.Util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import android.util.Log;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -28,24 +36,19 @@ public class VideoAdapter extends ArrayAdapter <Video> {
     private List<Video> mVideos;
     private TextView videoName;
     private DatabaseHelper databaseHelper;
-    private AdapterListener adaptarListener;
+    private Button delete;
 
-    public interface AdapterListener{
-        void notifyAdapter();
-    }
-    public VideoAdapter( Context context, List<Video> object) {
-        super(context, R.layout.activity_listview ,object);
+
+    public VideoAdapter(@NonNull Context context, @SuppressLint("SupportAnnotationUsage") @LayoutRes List<Video> object) {
+        super(context, 0 ,object);
         mContext = context;
         mVideos = object;
         databaseHelper=new DatabaseHelper(mContext);
     }
 
-    public void setListener(AdapterListener adaptarListener){
-        this.adaptarListener=adaptarListener;
-    }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         final ViewHolder holder;
 
         if (convertView == null) {
@@ -55,10 +58,13 @@ public class VideoAdapter extends ArrayAdapter <Video> {
             holder.videoView.setOnClickListener((view)->{
                 Video video=databaseHelper.videosList().get(position);
                 databaseHelper.removeVideo(video.getId());
-                adaptarListener.notifyAdapter();
                 Log.d(TAG,"Remove Video");
             });
             videoName=(TextView) convertView.findViewById(R.id.textView);
+            delete=(Button)convertView.findViewById(R.id.delete);
+
+
+
             convertView.setTag(holder);
         }
         else {
@@ -98,4 +104,15 @@ public class VideoAdapter extends ArrayAdapter <Video> {
         mContext.getContentResolver().delete(Uri.parse(path), null, null);
 
     }
+
+
+
+
+    /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newVideoPath));
+    intent.setDataAndType(Uri.parse(newVideoPath), "video/mp4");
+    startActivity(intent);
+*/
+
+
+
 }

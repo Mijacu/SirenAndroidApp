@@ -125,6 +125,12 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         ringer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //code to send sms message via working phone
+               /* SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage("9154782867", null, "Motion Detected at Front door", null, null);*/
+
+
                 vb.vibrate(100);
                 if(!r.isPlaying()){
                     r.play();

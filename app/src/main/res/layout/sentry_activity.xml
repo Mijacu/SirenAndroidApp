@@ -20,11 +20,13 @@
         android:id="@+id/surface_view"/>
     <Button
         android:id="@+id/doorbell"
-        android:layout_width="135dp"
-        android:layout_height="95dp"
+        android:background="@drawable/round_button"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:text="Ring" />
+        android:layout_marginTop="80dp"
+        android:text="Ring"
+        android:textSize="40dp"/>
 
     <Button
         android:id="@+id/disarm"
