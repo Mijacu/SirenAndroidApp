@@ -56,8 +56,8 @@ public class CameraHelper {
      * @param h     The height of the view.
      * @return Best match camera video size to fit in the view.
      */
-    public Camera.Size getOptimalVideoSize(List<Camera.Size> supportedVideoSizes,
-            List<Camera.Size> previewSizes, int w, int h) {
+    public static Camera.Size getOptimalVideoSize(List<Camera.Size> supportedVideoSizes,
+                                                  List<Camera.Size> previewSizes, int w, int h) {
         // Use a very small tolerance because we want an exact match.
         final double ASPECT_TOLERANCE = 0.1;
         double targetRatio = (double) w / h;
@@ -108,7 +108,7 @@ public class CameraHelper {
     /**
      * @return the default camera on the device. Return null if there is no camera on the device.
      */
-    public Camera getDefaultCameraInstance() {
+    public static Camera getDefaultCameraInstance() {
         return Camera.open();
     }
 
@@ -161,7 +161,7 @@ public class CameraHelper {
      * @param type Media type. Can be video or image.
      * @return A file object pointing to the newly created file.
      */
-    public File getOutputMediaFile(int type){
+    public static File getOutputMediaFile(int type){
         String videoName;
         // To be safe, you should check that the SDCard is mounted
         // using Environment.getExternalStorageState() before doing this.

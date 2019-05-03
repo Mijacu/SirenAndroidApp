@@ -4,12 +4,14 @@ public class Video {
     private int id;
     private String name;
     private String date;
+    private String path;
     public Video(){
-        this("","");
+        this("","","");
     }
-    public Video(String name, String date){
+    public Video(String name, String date,String path){
         this.name=name;
         this.date=date;
+        this.path=path;
     }
     public void setId(int id){
         this.id=id;
@@ -29,4 +31,13 @@ public class Video {
     public String getDate(){
         return date;
     }
+    public String getPath(){
+        return path;
+    }
+    public void setPath(String path){
+        this.path=path;
+    }
+
+
 }
+

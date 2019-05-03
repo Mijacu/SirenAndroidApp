@@ -12,7 +12,6 @@ import java.util.List;
 import edu.utep.cs.sirenandroidapp.Model.Video;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-
     private static final int DB_VERSION = 1;
     private static final String DB_NAME = "SirenDB";
     private static final String TODO_TABLE = "items";
