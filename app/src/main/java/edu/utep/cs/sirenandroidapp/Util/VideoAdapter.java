@@ -1,14 +1,21 @@
 package edu.utep.cs.sirenandroidapp.Util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -23,23 +30,29 @@ public class VideoAdapter extends ArrayAdapter <Video> {
     private Context mContext;
     private List<Video> mVideos;
     private TextView videoName;
+    private Button delete;
 
-    public VideoAdapter( Context context, List<Video> object) {
-        super(context, R.layout.activity_listview ,object);
+
+    public VideoAdapter(@NonNull Context context, @SuppressLint("SupportAnnotationUsage") @LayoutRes List<Video> object) {
+        super(context, 0 ,object);
         mContext = context;
         mVideos = object;
+
     }
 
-
+    @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         final ViewHolder holder;
-
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_listview, null);
             holder = new ViewHolder();
             holder.videoView = (VideoView) convertView.findViewById(R.id.videoView);
             videoName=(TextView) convertView.findViewById(R.id.textView);
+            delete=(Button)convertView.findViewById(R.id.delete);
+
+
+
             convertView.setTag(holder);
         }
         else {
@@ -53,10 +66,20 @@ public class VideoAdapter extends ArrayAdapter <Video> {
             Video video = mVideos.get(position);
             //play video using android api, when video view is clicked.
             String url = video.getPath(); // your videoName
-            Uri videoUri = Uri.parse(url);
-           // Uri videoUri= Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/media/1.mp4" );
+           Uri videoUri = Uri.parse(url);
+           // mContext.getContentResolver().delete(Uri.parse(url), null, null);
             holder.videoView.setVideoURI(videoUri);
-                videoName.setText("Date : "+video.getDate());
+            videoName.setText("ID : "+video.getDate());
+
+            delete.setOnClickListener(new View.OnClickListener() {
+
+                public void onClick(View v) {
+                mVideos.remove(position);
+                notifyDataSetChanged();
+
+                }
+            });
+
             holder.videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
@@ -93,7 +116,10 @@ public class VideoAdapter extends ArrayAdapter <Video> {
 
 
 
-
+    /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newVideoPath));
+    intent.setDataAndType(Uri.parse(newVideoPath), "video/mp4");
+    startActivity(intent);
+*/
 
 
 
