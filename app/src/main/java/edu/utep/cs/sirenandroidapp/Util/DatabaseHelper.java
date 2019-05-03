@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.utep.cs.sirenandroidapp.Model.Video;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;
@@ -38,21 +40,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(database);
     }
 
-    public void addVideo(Item item) {
+    public void addVideo(Video video) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, item.getName()); //item name
-        values.put(KEY_URL, item.getUrl()); // item url
-        values.put(KEY_CURRENTPRICE, item.getCurrentPrice()); // item current price
-        values.put(KEY_INITIALPRICE, item.getInitialPrice()); // item initial price
-        values.put(KEY_DATE, item.getDate()); // item date
+        values.put(KEY_NAME, video.getName()); //item name
+        values.put(KEY_DATE, video.getDate()); // item date
         long id = db.insert(TODO_TABLE, null, values);
-        item.setId((int) id);
+        video.setId((int) id);
         db.close();
     }
 
-    public List<Item> allItems() {
-        List<Item> items=new ArrayList<Item>();
+    public List<Video> videosList() {
+        List<Video> videos=new ArrayList<Video>();
         String selectQuery = "SELECT * FROM " + TODO_TABLE;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -60,19 +59,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 int id = cursor.getInt(0);
                 String name = cursor.getString(1);
-                String url = cursor.getString(2);
-                double currentPrice = cursor.getDouble(3);
-                double initialPrice = cursor.getDouble(4);
-                String date=cursor.getString(5);
-                Item item = new Item(name, url, initialPrice);
-                item.setId(id);
-                item.setCurrentPrice(currentPrice);
-                item.getChange();
-                item.setDate(date);
-                items.add(item);
+                String date=cursor.getString(2);
+                Video video= new Video(name, date);
+                video.setId(id);
+                video.setName(name);
+                video.setDate(date);
+                videos.add(video);
             } while (cursor.moveToNext());
         }
-        return items;
+        return videos;
     }
 
 
@@ -82,22 +77,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void removeItem(int id) {
+    public void removeVideo(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TODO_TABLE, KEY_ID + " = ?", new String[] { Integer.toString(id) } );
         db.close();
     }
 
-    public void update(Item item) {
+    public void update(Video video) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, item.getName()); //item name
-        values.put(KEY_URL, item.getUrl()); // item url
-        values.put(KEY_CURRENTPRICE, item.getCurrentPrice()); // item current price
-        values.put(KEY_INITIALPRICE, item.getInitialPrice()); // item initial price
-        values.put(KEY_DATE, item.getDate()); // item date
-        db.update(TODO_TABLE, values, KEY_ID + " = ?", new String[]{String.valueOf(item.getId())});
+        values.put(KEY_NAME, video.getName()); //video name
+        values.put(KEY_DATE, video.getDate()); //video date
+        db.update(TODO_TABLE, values, KEY_ID + " = ?", new String[]{String.valueOf(video.getId())});
         db.close();
     }
-
 }
