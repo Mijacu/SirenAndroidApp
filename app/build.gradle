@@ -19,7 +19,8 @@ android {
     sourceSets { main { jni.srcDirs = ['src/main/jni', 'src/main/jniLibs/'] } }
     externalNativeBuild {
         ndkBuild {
-            path file('C:\\Users\\ejacq\\Desktop\\OpenCV-android-sdk\\sdk\\native\\jni\\OpenCV.mk')
+            //C:\Users\Ubaldo\Documents\Mobile_Applications\Project\2_Libraries\OpenCV-android-sdk\sdk\native\jni\OpenCV.mk
+            path file('C:\\Users\\Ubaldo\\Documents\\Mobile_Applications\\Project\\2_Libraries\\OpenCV-android-sdk\\sdk\\native\\jni\\OpenCV.mk')
         }
     }
 }
