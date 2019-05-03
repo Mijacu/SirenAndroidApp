@@ -29,7 +29,6 @@ public class VideoAdapter extends ArrayAdapter <Video> {
         super(context, R.layout.activity_listview ,object);
         mContext = context;
         mVideos = object;
-
     }
 
 
@@ -53,10 +52,8 @@ public class VideoAdapter extends ArrayAdapter <Video> {
         /***get clicked view and play video url at this position**/
         try {
             Video video = mVideos.get(position);
-           // deleteVideo(video.getName());
             //play video using android api, when video view is clicked.
             String url = video.getName(); // your videoName
-            //String name = video.getName(); // your videoName
            Uri videoUri = Uri.parse(url);
            // Uri videoUri= Uri.parse(Environment.getExternalStorageDirectory().getPath()+"/media/1.mp4" );
             holder.videoView.setVideoURI(videoUri);

@@ -32,15 +32,16 @@ public class VideoListActivity extends AppCompatActivity {
         mVideosListView = (ListView) findViewById(R.id.video_list);
         paths=getAllMedia();
 
+
         for(int i=0;i<paths.size();i++){
-            System.out.println("paths: "+paths.get(i));
-            Video riverVideo = new Video(paths.get(i),"199"+i);
+            Video riverVideo = new Video(paths.get(i),"199"+i,paths.get(i));
             mVideosList.add(riverVideo);
         }
 
         /***populate video list to adapter**/
         mVideoAdapter = new VideoAdapter(this, mVideosList);
         mVideosListView.setAdapter(mVideoAdapter);
+        registerForContextMenu(mVideosListView);
 
 
     }
