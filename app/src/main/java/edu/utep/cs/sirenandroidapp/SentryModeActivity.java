@@ -65,12 +65,15 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
     private Camera mCamera;
     private TextureView mPreview;
     private MediaRecorder mMediaRecorder;
+    private CameraHelper cameraHelper;
     private File mOutputFile;
-    private CountDownTimer timer;
-    boolean isPlaying=false;
+    private CountDownTimer setDownTimer;
+    private CountDownTimer recordTimer;
     final Context context = this;
 
-    private Vibrator vibe;
+    private Ringtone r;
+    private Vibrator vb;
+    private Uri ring;
 
     private boolean isRecording = false;
 
@@ -114,26 +117,24 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.sentry_activity);
+        ring = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        r = RingtoneManager.getRingtone(getApplicationContext(), ring);
+        vb=(Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
 
-      Button ringer= (Button) findViewById(R.id.doorbell);
+        Button ringer= (Button) findViewById(R.id.doorbell);
         ringer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                 vb.vibrate(100);
-                Uri ring = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-                Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), ring);
-                if(isPlaying==false) {
+                if(!r.isPlaying()){
                     r.play();
-                    isPlaying=true;
+                }else{
+                    r.stop();
                 }
-               else{ r.stop();
-               }
-
             }
         });
 
-       Button disarm=(Button)findViewById(R.id.disarm);
+        Button disarm=(Button)findViewById(R.id.disarm);
         disarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -151,6 +152,7 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
         mPreview = (TextureView) findViewById(R.id.surface_view);
+        cameraHelper=new CameraHelper(this);
 
     }
 
@@ -179,12 +181,12 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
         ready=false;
-        new CountDownTimer(5000,3000){
+        setDownTimer=new CountDownTimer(5000,3000){
 
             @Override
             public void onTick(long millisUntilFinished) {
-                Log.d(TAG,"seconds remaining: " + millisUntilFinished / 1000);
-                Toast.makeText(SentryModeActivity.this, "seconds remaining: " + millisUntilFinished / 1000, Toast.LENGTH_SHORT).show();
+                Log.d(TAG,"Waiting time remaining: " + millisUntilFinished / 1000);
+                Toast.makeText(SentryModeActivity.this, "Waiting time remaining: " + millisUntilFinished / 1000, Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -196,8 +198,15 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
 
     public void onDestroy() {
         super.onDestroy();
-        if (mOpenCvCameraView != null)
+        if (mOpenCvCameraView != null){
             mOpenCvCameraView.disableView();
+        }
+        if (setDownTimer != null){
+            setDownTimer.cancel();
+        }
+        if (recordTimer != null){
+            recordTimer.cancel();
+        }
     }
 
     public void onCameraViewStarted(int width, int height) {
@@ -219,12 +228,12 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         Core.flip(mRgbaF, mRgba, 1 );
 
         Mat mat=detector.detect(mRgba);
-        if(detector.isDetected() && timer==null && ready==true){
+        if(detector.isDetected() && recordTimer==null && ready==true){
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    timer = new MyCountDownTimer(10000, 3000);
-                    timer.start();
+                    recordTimer = new RecordingTimer(10000, 3000);
+                    recordTimer.start();
                 }
 
             });
@@ -236,16 +245,16 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         }
         return mat; // This function must return
     }
-    public class MyCountDownTimer extends CountDownTimer {
+    public class RecordingTimer extends CountDownTimer {
 
-        public MyCountDownTimer(long millisInFuture, long countDownInterval) {
+        public RecordingTimer(long millisInFuture, long countDownInterval) {
             super(millisInFuture, countDownInterval);
         }
 
         @Override
         public void onTick(long millisUntilFinished) {
-            Log.d(TAG,"seconds remaining: " + millisUntilFinished / 1000);
-            Toast.makeText(SentryModeActivity.this, "seconds remaining: " + millisUntilFinished / 1000, Toast.LENGTH_SHORT).show();
+            Log.d(TAG,"Recording time remaining: " + millisUntilFinished / 1000);
+            Toast.makeText(SentryModeActivity.this, "Recording time remaining: " + millisUntilFinished / 1000, Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -259,7 +268,7 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
             Intent intent=new Intent();
             intent.putExtra("message","keep sentry");
             setResult(RESULT_OK, intent);
-            finish();//finishing activity
+            SentryModeActivity.this.finish();//finishing activity
         }
     }
 
@@ -326,15 +335,15 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
     private boolean prepareVideoRecorder(){
 
         // BEGIN_INCLUDE (configure_preview)
-       mCamera = CameraHelper.getDefaultCameraInstance();
-       // mCamera = CameraHelper.getDefaultFrontFacingCameraInstance();
+        mCamera = cameraHelper.getDefaultCameraInstance();
+        // mCamera = CameraHelper.getDefaultFrontFacingCameraInstance();
         // We need to make sure that our preview and recording video size are supported by the
         // camera. Query camera to find all the sizes and choose the optimal size given the
         // dimensions of our preview surface.
         Camera.Parameters parameters = mCamera.getParameters();
         List<Camera.Size> mSupportedPreviewSizes = parameters.getSupportedPreviewSizes();
         List<Camera.Size> mSupportedVideoSizes = parameters.getSupportedVideoSizes();
-        Camera.Size optimalSize = CameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
+        Camera.Size optimalSize = cameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
                 mSupportedPreviewSizes, mPreview.getWidth(), mPreview.getHeight());
 
         // Use the same size for recording profile.
@@ -374,7 +383,7 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         mMediaRecorder.setProfile(profile);
 
         // Step 4: Set output file
-        mOutputFile = CameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);
+        mOutputFile = cameraHelper.getOutputMediaFile(CameraHelper.MEDIA_TYPE_VIDEO);
         if (mOutputFile == null) {
             return false;
         }
@@ -473,8 +482,6 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
             }
             // inform the user that recording has started
             //setCaptureButtonText("Stop");
-            timer=null;
-
         }
     }
 

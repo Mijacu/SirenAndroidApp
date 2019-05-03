@@ -36,7 +36,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".VideoListActivity"></activity>
-        <activity android:name=".VideoRecording" />
         <activity android:name=".SirenSettings" />
         <activity android:name=".MainActivity">
             <intent-filter>
