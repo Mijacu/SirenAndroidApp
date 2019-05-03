@@ -6,26 +6,13 @@ import android.widget.EditText;
 
 public class SirenSettings extends AppCompatActivity {
 
-    EditText name;
-    EditText email;
-    EditText password;
-    EditText recordTime;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_siren_settings);
-       /* name.findViewById(R.id.name);
-        email.findViewById(R.id.email);
-        password.findViewById(R.id.password);
-        recordTime.findViewById(R.id.recorctime);*/
 
-
-
+        // Display the fragment as the main content.
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new SettingsFragment())
+                .commit();
     }
-
-
-
 }

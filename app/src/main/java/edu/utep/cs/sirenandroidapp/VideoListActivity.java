@@ -10,6 +10,8 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.view.ContextMenu;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -32,6 +34,7 @@ public class VideoListActivity extends AppCompatActivity {
     private VideoAdapter mVideoAdapter;
     private DatabaseHelper dbHelper;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,12 +44,9 @@ public class VideoListActivity extends AppCompatActivity {
         mVideosList=dbHelper.videosList();
 
         /***populate video list to adapter**/
-        mVideoAdapter = new VideoAdapter(this,mVideosList);
-
+        mVideoAdapter = new VideoAdapter(this, mVideosList);
         mVideosListView.setAdapter(mVideoAdapter);
         registerForContextMenu(mVideosListView);
-
-
     }
 
 
@@ -65,10 +65,15 @@ public class VideoListActivity extends AppCompatActivity {
         return true;
     }
 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-        menu.add(0, v.getId(), 0, "Delete");
+
+
+
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.setHeaderTitle("Context Menu");
+        menu.add(0, v.getId(), 0, "Upload");
+        menu.add(0, v.getId(), 0, "Search");
     }
-
-
-
 }
