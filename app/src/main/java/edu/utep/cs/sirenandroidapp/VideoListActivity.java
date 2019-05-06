@@ -44,12 +44,6 @@ public class VideoListActivity extends AppCompatActivity {
 
         /***populate video list to adapter**/
         mVideoAdapter = new VideoAdapter(this, mVideosList);
-        mVideoAdapter.setListener(new VideoAdapter.AdapterListener(){
-
-            @Override
-            public void notifyAdapter() {
-                mVideoAdapter.notifyDataSetChanged();
-            }
-        });
         mVideosListView.setAdapter(mVideoAdapter);
+    }
 }

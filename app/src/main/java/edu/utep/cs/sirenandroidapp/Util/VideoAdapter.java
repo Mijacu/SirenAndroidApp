@@ -4,28 +4,19 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import android.util.Log;
-import android.support.v7.widget.CardView;
-import android.util.Log;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.VideoView;
 
 import java.util.List;
-
-import edu.utep.cs.sirenandroidapp.Model.CameraHelper;
 import edu.utep.cs.sirenandroidapp.Model.Video;
 import edu.utep.cs.sirenandroidapp.R;
 
@@ -55,24 +46,18 @@ public class VideoAdapter extends ArrayAdapter <Video> {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.activity_listview, parent,false);
             holder = new ViewHolder();
             holder.videoView = (VideoView) convertView.findViewById(R.id.videoView);
-            holder.videoView.setOnClickListener((view)->{
+            videoName=(TextView) convertView.findViewById(R.id.textView);
+            delete=(Button)convertView.findViewById(R.id.delete);
+            delete.setOnClickListener((view)->{
                 Video video=databaseHelper.videosList().get(position);
                 databaseHelper.removeVideo(video.getId());
                 Log.d(TAG,"Remove Video");
             });
-            videoName=(TextView) convertView.findViewById(R.id.textView);
-            delete=(Button)convertView.findViewById(R.id.delete);
-
-
-
             convertView.setTag(holder);
         }
         else {
-
             holder = (ViewHolder) convertView.getTag();
-
         }
-
         /***get clicked view and play video url at this position**/
         try {
             Video video = mVideos.get(position);
@@ -99,14 +84,6 @@ public class VideoAdapter extends ArrayAdapter <Video> {
     public static class ViewHolder {
         VideoView videoView;
     }
-
-    public void deleteVideo(String path){
-        mContext.getContentResolver().delete(Uri.parse(path), null, null);
-
-    }
-
-
-
 
     /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newVideoPath));
     intent.setDataAndType(Uri.parse(newVideoPath), "video/mp4");
