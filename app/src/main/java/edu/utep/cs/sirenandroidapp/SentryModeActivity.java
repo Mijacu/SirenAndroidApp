@@ -164,10 +164,9 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
                                         public void onClick(DialogInterface dialog,int id) {
                                            String t= pin.getText().toString();
                                             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                                            String test=prefs.getString("userPinId", "");
-                                           if(t.equals(test)){
-                                               Intent i=new Intent(getApplicationContext(),MainActivity.class);
-                                               startActivity(i);
+                                            String pin=prefs.getString("userPinId", "");
+                                           if(t.equals(pin)){
+                                               SentryModeActivity.this.finish();
                                            }
                                         }
                                     })

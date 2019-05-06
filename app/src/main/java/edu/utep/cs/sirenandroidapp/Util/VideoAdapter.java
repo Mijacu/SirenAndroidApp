@@ -114,6 +114,7 @@ public class VideoAdapter extends ArrayAdapter <Video> {
     }
 
 
+
     public static class ViewHolder {
         VideoView videoView;
     }
