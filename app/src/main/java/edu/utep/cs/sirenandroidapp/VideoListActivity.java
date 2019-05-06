@@ -101,4 +101,3 @@ public class VideoListActivity extends AppCompatActivity {
         menu.add(0, v.getId(), 0, "Search");
     }
 }
-

@@ -68,6 +68,7 @@ public class VideoAdapter extends ArrayAdapter <Video> {
             holder = (ViewHolder) convertView.getTag();
 
         }
+
         /***get clicked view and play video url at this position**/
         try {
             Video video = mVideos.get(position);
@@ -115,7 +116,6 @@ public class VideoAdapter extends ArrayAdapter <Video> {
 
     public static class ViewHolder {
         VideoView videoView;
-
     }
 
     public void deleteVideo(String path){

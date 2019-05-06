@@ -24,6 +24,10 @@ android {
             path file('C:\\Users\\Ubaldo\\Documents\\Mobile_Applications\\Project\\2_Libraries\\OpenCV-android-sdk\\sdk\\native\\jni\\OpenCV.mk')
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
