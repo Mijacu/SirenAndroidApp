@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:title="@string/userInfo" >
         <EditTextPreference
-            android:inputType="number"
+            android:inputType="text"
             android:maxLength="10"
             android:key="@string/userNameId"
             android:summary="@string/pref_user_name_summary"

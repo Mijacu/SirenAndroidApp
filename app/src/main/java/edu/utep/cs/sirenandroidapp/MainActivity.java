@@ -2,6 +2,7 @@ package edu.utep.cs.sirenandroidapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,8 @@ import android.widget.Toast;
 import android.preference.PreferenceManager;
 
 import org.opencv.android.OpenCVLoader;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i=new Intent(getApplicationContext(),VideoListActivity.class);
                 startActivity(i);
+
             }
         });
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         });
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 // then you use
-        String test=prefs.getString("phoneNumber", "");
+        String test=prefs.getString("userPinId", "");
         Log.d(TAG, String.valueOf(test));
 
     }
@@ -73,5 +77,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+    }
+    @Override
+    public void onBackPressed() {
     }
 }

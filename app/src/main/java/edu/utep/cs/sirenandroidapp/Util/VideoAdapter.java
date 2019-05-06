@@ -2,6 +2,7 @@ package edu.utep.cs.sirenandroidapp.Util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
@@ -12,20 +13,27 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
 import edu.utep.cs.sirenandroidapp.Model.CameraHelper;
 import edu.utep.cs.sirenandroidapp.Model.Video;
 import edu.utep.cs.sirenandroidapp.R;
 
+import static android.support.constraint.Constraints.TAG;
+
 public class VideoAdapter extends ArrayAdapter <Video> {
+
 
     private Context mContext;
     private List<Video> mVideos;
@@ -60,13 +68,13 @@ public class VideoAdapter extends ArrayAdapter <Video> {
             holder = (ViewHolder) convertView.getTag();
 
         }
-
         /***get clicked view and play video url at this position**/
         try {
             Video video = mVideos.get(position);
             //play video using android api, when video view is clicked.
-            String url = video.getPath(); // your videoName
-           Uri videoUri = Uri.parse(url);
+            String path = video.getPath(); // your videoName
+            System.out.println("=========================: "+path);
+           Uri videoUri = Uri.parse(path);
            // mContext.getContentResolver().delete(Uri.parse(url), null, null);
             holder.videoView.setVideoURI(videoUri);
             videoName.setText("ID : "+video.getDate());
@@ -76,6 +84,12 @@ public class VideoAdapter extends ArrayAdapter <Video> {
                 public void onClick(View v) {
                 mVideos.remove(position);
                 notifyDataSetChanged();
+
+                    String path="/storage/emulated/0/Pictures/SirenAppVideos/VID_20190502_220051.mp4";
+                    path="content://"+path;
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(path), "video/*");
+                    mContext.startActivity(intent);
 
                 }
             });
@@ -101,20 +115,26 @@ public class VideoAdapter extends ArrayAdapter <Video> {
 
     public static class ViewHolder {
         VideoView videoView;
+
     }
 
     public void deleteVideo(String path){
-        mContext.getContentResolver().delete(Uri.parse(path), null, null);
+
+        File file = new File(path);
+        boolean deleted = file.delete();
+        System.out.println("true or false: "+deleted);
+        //mContext.getContentResolver().delete(Uri.parse(path), null, null);
 
     }
 
 
 
 
-    /*Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(newVideoPath));
-    intent.setDataAndType(Uri.parse(newVideoPath), "video/mp4");
-    startActivity(intent);
-*/
+     /* String path="/storage/emulated/0/Pictures/SirenAppVideos/VID_20190502_220051.mp4";
+                path="content://"+path;
+                        Intent intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setDataAndType(Uri.parse(path), "video/*");
+                        startActivity(intent);*/
 
 
 

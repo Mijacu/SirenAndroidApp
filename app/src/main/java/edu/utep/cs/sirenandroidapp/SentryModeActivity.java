@@ -4,11 +4,13 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.media.CamcorderProfile;
@@ -22,13 +24,16 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.TextureView;
@@ -146,20 +151,51 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
             public void onClick(View view) {
                 Vibrator vb = (Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
                 vb.vibrate(100);
-                final Dialog dialog = new Dialog(context);
-                dialog.setContentView(R.layout.number_pad);
-                dialog.show();
+                    LayoutInflater inflater = LayoutInflater.from(context);
+                    View promptsView = inflater.inflate(R.layout.number_pad, null);
 
-            }
-        });
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                    alertDialogBuilder.setView(promptsView);
+
+                    final EditText pin = (EditText) promptsView.findViewById(R.id.pinInput);
+                    alertDialogBuilder
+                            .setCancelable(false)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                           String t= pin.getText().toString();
+                                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+                                            String test=prefs.getString("userPinId", "");
+                                           if(t.equals(test)){
+                                               Intent i=new Intent(getApplicationContext(),MainActivity.class);
+                                               startActivity(i);
+                                           }
+                                        }
+                                    })
+                            .setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog,int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alertDialog = alertDialogBuilder.create();
+                    alertDialog.show();
+                }
+            });
+
+
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_java_surface_view);
-
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
         mOpenCvCameraView.setCvCameraViewListener(this);
         mPreview = (TextureView) findViewById(R.id.surface_view);
         cameraHelper=new CameraHelper(this);
     }
+
+    @Override
+    public void onBackPressed() {
+    }
+
+
 
     @Override
     public void onPause()
@@ -340,6 +376,7 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
     private boolean prepareVideoRecorder(){
 
         // BEGIN_INCLUDE (configure_preview)
+
         mCamera = cameraHelper.getDefaultCameraInstance();
         // mCamera = CameraHelper.getDefaultFrontFacingCameraInstance();
         // We need to make sure that our preview and recording video size are supported by the
