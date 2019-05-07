@@ -79,6 +79,8 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
     private Ringtone r;
     private Vibrator vb;
     private Uri ring;
+    SharedPreferences prefs;
+    boolean notifications;
 
     private boolean isRecording = false;
 
@@ -88,8 +90,7 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
             Manifest.permission.CAMERA,
     };
     private CameraBridgeViewBase mOpenCvCameraView;
-    private boolean              mIsJavaCamera = true;
-    private MenuItem             mItemSwitchCamera = null;
+
     // These variables are used (at the moment) to fix camera orientation from 270degree to 0degree
     private Mat mRgba;
     private Mat mRgbaF;
@@ -122,6 +123,9 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.sentry_activity);
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        notifications=prefs.getBoolean("prefNotifications", false);
+
         ring = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
         r = RingtoneManager.getRingtone(getApplicationContext(), ring);
         vb=(Vibrator)   getSystemService(Context.VIBRATOR_SERVICE);
@@ -132,9 +136,11 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
             public void onClick(View view) {
 
                 //code to send sms message via working phone
-               /* SmsManager smsManager = SmsManager.getDefault();
-                smsManager.sendTextMessage("9154782867", null, "Motion Detected at Front door", null, null);*/
-
+                String phoneNum=prefs.getString("userPhoneId", "");
+                if(notifications && !phoneNum.equals("")){
+                    SmsManager smsManager = SmsManager.getDefault();
+                    smsManager.sendTextMessage(phoneNum, null, "Someone ring the bell", null, null);
+                }
 
                 vb.vibrate(100);
                 if(!r.isPlaying()){
@@ -163,11 +169,9 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog,int id) {
                                            String t= pin.getText().toString();
-                                            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-                                            String test=prefs.getString("userPinId", "");
-                                           if(t.equals(test)){
-                                               Intent i=new Intent(getApplicationContext(),MainActivity.class);
-                                               startActivity(i);
+                                            String pin=prefs.getString("userPinId", "");
+                                           if(t.equals(pin)){
+                                               SentryModeActivity.this.finish();
                                            }
                                         }
                                     })
@@ -208,6 +212,8 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         releaseMediaRecorder();
         // release the camera immediately on pause event
         releaseCamera();
+        //Stop sound
+        r.stop();
     }
 
     @Override
@@ -270,6 +276,12 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
 
         Mat mat=detector.detect(mRgba);
         if(detector.isDetected() && recordTimer==null && ready==true){
+            //code to send sms message via working phone
+            String phoneNum=prefs.getString("userPhoneId", "");
+            if(notifications && !phoneNum.equals("")){
+                SmsManager smsManager = SmsManager.getDefault();
+                smsManager.sendTextMessage(phoneNum, null, "Motion Detected at Front door", null, null);
+            }
             new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {

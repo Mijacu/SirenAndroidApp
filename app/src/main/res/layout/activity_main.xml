@@ -1,40 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
     tools:context="edu.utep.cs.sirenandroidapp.MainActivity">
 
     <TextView
-        android:id="@+id/mainView"
+        android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Main Menu"
-        android:textSize="32sp"/>
+        android:text="Welcome "
+        android:textSize="27sp" />
 
-
-    <Button
-        android:id="@+id/sentryButton"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Sentry Mode" />
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/videosButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Videos" />
-
-    <Button
-        android:id="@+id/settingsButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Settings" />
+        <TextView
+            android:id="@+id/mainView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Main Menu"
+            android:textSize="32sp" />
 
 
+        <Button
+            android:id="@+id/sentryButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sentry Mode" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/videosButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Videos" />
+
+        <Button
+            android:id="@+id/settingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Settings" />
+    </LinearLayout>
+
+
+</RelativeLayout>

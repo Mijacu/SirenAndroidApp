@@ -29,7 +29,7 @@ import edu.utep.cs.sirenandroidapp.Util.DatabaseHelper;
 import edu.utep.cs.sirenandroidapp.Util.VideoAdapter;
 
 public class VideoListActivity extends AppCompatActivity {
-
+    private static final String TAG ="SirenApp";
 
     private ListView mVideosListView;
     private List<Video> mVideosList = new ArrayList<>();
@@ -39,65 +39,21 @@ public class VideoListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate videoAdapter");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
         mVideosListView = (ListView) findViewById(R.id.video_list);
         dbHelper=new DatabaseHelper(this);
         mVideosList=dbHelper.videosList();
+        for(Video video:mVideosList){
+            Log.d(TAG, "Video: "+video.getId());
+        }
 
 
         /***populate video list to adapter**/
         mVideoAdapter = new VideoAdapter(this, mVideosList);
+        mVideoAdapter.setActivity(this);
         mVideosListView.setAdapter(mVideoAdapter);
 
-        mVideosListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, final View view,int position, long id) {
-                final String item = (String) parent.getItemAtPosition(position);
-                view.animate().setDuration(2000).alpha(0)
-                        .withEndAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                mVideosList.remove(item);
-                                mVideoAdapter.notifyDataSetChanged();
-                                view.setAlpha(1);
-                            }
-                        });
-            }
-
-        });
-
-
-
-
-        registerForContextMenu(mVideosListView);
-    }
-
-
-
-
-    public boolean onContextItemSelected(MenuItem item){
-        AdapterView.AdapterContextMenuInfo info=(AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-        if(item.getTitle().equals("Delete")){
-
-            Toast.makeText(getApplicationContext(), "Delete Clicked", Toast.LENGTH_LONG).show();
-        }
-
-
-        return true;
-    }
-
-
-
-
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.setHeaderTitle("Context Menu");
-        menu.add(0, v.getId(), 0, "Upload");
-        menu.add(0, v.getId(), 0, "Search");
     }
 }

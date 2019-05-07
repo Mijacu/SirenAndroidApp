@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.preference.PreferenceManager;
 
@@ -22,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private Button sentryButton;
     private Button videosButton;
     private Button settingsButton;
+    private TextView userWelcome;
+    private SharedPreferences prefs;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +36,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "  OpenCVLoader.initDebug(), working.");
         }
+        userWelcome=findViewById(R.id.userName);
         sentryButton = (Button) findViewById(R.id.sentryButton);
         videosButton = (Button) findViewById(R.id.videosButton);
         settingsButton = (Button) findViewById(R.id.settingsButton);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        userName=prefs.getString("userNameId","");
+        if(!userName.equals("")){userWelcome.setText("Welcome "+userName);}
 
         sentryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,8 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i=new Intent(getApplicationContext(),VideoListActivity.class);
-                startActivity(i);
-
+                startActivityForResult(i,1);
             }
         });
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -60,11 +67,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-// then you use
-        String test=prefs.getString("userPinId", "");
-        Log.d(TAG, String.valueOf(test));
-
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
@@ -74,11 +76,15 @@ public class MainActivity extends AppCompatActivity {
             if(msg.equals("keep sentry")){
                 Intent i=new Intent(getApplicationContext(),SentryModeActivity.class);
                 startActivityForResult(i, 1); // 1: request code
+            }else if(msg.equals("keep video list")){
+                Intent i=new Intent(getApplicationContext(),VideoListActivity.class);
+                startActivityForResult(i, 1); // 1: request code
             }
         }
 
     }
-    @Override
-    public void onBackPressed() {
-    }
 }
+
+//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//String test=prefs.getString("userPinId", "");
+//Log.d(TAG, String.valueOf(test));

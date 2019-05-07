@@ -4,7 +4,7 @@
     <PreferenceCategory android:title="@string/userInfo" >
         <EditTextPreference
             android:inputType="text"
-            android:maxLength="10"
+            android:maxLength="20"
             android:key="@string/userNameId"
             android:summary="@string/pref_user_name_summary"
             android:title="@string/pref_user_name" />
@@ -19,11 +19,11 @@
             android:summary="@string/pref_notifications_summary">
         </CheckBoxPreference>
 
-        <EditTextPreference
+        <!--EditTextPreference
             android:inputType="textEmailAddress"
             android:key="@string/userEmailId"
             android:summary="@string/pref_user_email_summary"
-            android:title="@string/pref_user_email" />
+            android:title="@string/pref_user_email" /-->
 
         <EditTextPreference
             android:inputType="phone"
