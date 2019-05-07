@@ -106,7 +106,6 @@ public class VideoAdapter extends ArrayAdapter <Video> {
             //play video using android api, when video view is clicked.
             String path = video.getPath(); // your videoName
             Uri videoUri = Uri.parse(path);
-            // mContext.getContentResolver().delete(Uri.parse(url), null, null);
             holder.videoView.setVideoURI(videoUri);
             videoName.setText(video.getDate());
             play.setOnClickListener((view)->{
@@ -138,10 +137,3 @@ public class VideoAdapter extends ArrayAdapter <Video> {
         VideoView videoView;
     }
 }
-
-
-     /* String path="/storage/emulated/0/Pictures/SirenAppVideos/VID_20190502_220051.mp4";
-                path="content://"+path;
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.parse(path), "video/*");
-                        startActivity(intent);*/

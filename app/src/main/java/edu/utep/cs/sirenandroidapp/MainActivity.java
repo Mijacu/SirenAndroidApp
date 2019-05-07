@@ -84,7 +84,3 @@ public class MainActivity extends AppCompatActivity {
 
     }
 }
-
-//SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//String test=prefs.getString("userPinId", "");
-//Log.d(TAG, String.valueOf(test));
