@@ -107,6 +107,7 @@ public class VideoAdapter extends ArrayAdapter <Video> {
             String path = video.getPath(); // your videoName
             Uri videoUri = Uri.parse(path);
             holder.videoView.setVideoURI(videoUri);
+            //holder.videoView.setRotation(180f);
             videoName.setText(video.getDate());
             play.setOnClickListener((view)->{
                 Intent intent = new Intent(Intent.ACTION_VIEW);

@@ -190,6 +190,7 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
 
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.tutorial1_activity_java_surface_view);
         mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
+        mOpenCvCameraView.setCameraIndex(1);
         mOpenCvCameraView.setCvCameraViewListener(this);
         mPreview = (TextureView) findViewById(R.id.surface_view);
         cameraHelper=new CameraHelper(this);
@@ -198,8 +199,6 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
     @Override
     public void onBackPressed() {
     }
-
-
 
     @Override
     public void onPause()
@@ -228,7 +227,7 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
         ready=false;
-        setDownTimer=new CountDownTimer(5000,3000){
+        setDownTimer=new CountDownTimer(6000,3000){
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -272,7 +271,7 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         // Rotate mRgba 90 degrees
         Core.transpose(mRgba, mRgbaT);
         Imgproc.resize(mRgbaT, mRgbaF, mRgbaF.size(), 0,0, 0);
-        Core.flip(mRgbaF, mRgba, 1 );
+        Core.flip(mRgbaF, mRgba, 0 );
 
         Mat mat=detector.detect(mRgba);
         if(detector.isDetected() && recordTimer==null && ready==true){
@@ -359,10 +358,6 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
 
         }
     }
-    private void setCaptureButtonText(String title) {
-        //captureButton.setText(title);
-    }
-
 
     private void releaseMediaRecorder(){
         if (mMediaRecorder != null) {
@@ -389,8 +384,9 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
 
         // BEGIN_INCLUDE (configure_preview)
 
-        mCamera = cameraHelper.getDefaultCameraInstance();
-        // mCamera = CameraHelper.getDefaultFrontFacingCameraInstance();
+        //mCamera = cameraHelper.getDefaultCameraInstance();
+         mCamera = cameraHelper.getDefaultFrontFacingCameraInstance();
+         cameraHelper.setCameraDisplayOrientation(this,Camera.CameraInfo.CAMERA_FACING_FRONT,mCamera);
         // We need to make sure that our preview and recording video size are supported by the
         // camera. Query camera to find all the sizes and choose the optimal size given the
         // dimensions of our preview surface.
@@ -399,18 +395,15 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         List<Camera.Size> mSupportedVideoSizes = parameters.getSupportedVideoSizes();
         Camera.Size optimalSize = cameraHelper.getOptimalVideoSize(mSupportedVideoSizes,
                 mSupportedPreviewSizes, mPreview.getWidth(), mPreview.getHeight());
-
         // Use the same size for recording profile.
         //CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
         CamcorderProfile profile = CamcorderProfile
                 .get(CamcorderProfile.QUALITY_HIGH);
         profile.videoFrameWidth = optimalSize.width;
         profile.videoFrameHeight = optimalSize.height;
-
         // likewise for the camera object itself.
         parameters.setPreviewSize(profile.videoFrameWidth, profile.videoFrameHeight);
         mCamera.setParameters(parameters);
-
         try {
             // Requires API level 11+, For backward compatibility use {@link setPreviewDisplay}
             // with {@link SurfaceView}
@@ -428,7 +421,6 @@ public class SentryModeActivity extends AppCompatActivity implements CameraBridg
         // Step 1: Unlock and set camera to MediaRecorder
         mCamera.unlock();
         mMediaRecorder.setCamera(mCamera);
-
         // Step 2: Set sources
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT );
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);

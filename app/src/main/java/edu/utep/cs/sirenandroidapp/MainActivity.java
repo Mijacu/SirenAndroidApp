@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
         videosButton = (Button) findViewById(R.id.videosButton);
         settingsButton = (Button) findViewById(R.id.settingsButton);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        userName=prefs.getString("userNameId","");
-        if(!userName.equals("")){userWelcome.setText("Welcome "+userName);}
 
         sentryButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +65,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+    }
+
+    public void onResume() {
+        super.onResume();
+        userName=prefs.getString("userNameId","");
+        if(!userName.equals("")){userWelcome.setText("Welcome "+userName);}
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent result) {
